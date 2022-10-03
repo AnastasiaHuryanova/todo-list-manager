@@ -1,34 +1,63 @@
 import './App.css';
 import {todos} from "./assets/todos";
+import {useState} from "react";
 
 function App() {
-    // todos (che trovi nel file todos.js) é un array che contiene varie attivitá da svolgere
-    // Ognuna delle attivitá a delle properietá ovvero:
-    // completed che é un boolean
-    // id che é un numero intero
-    // todo che é una stringa
-    // userId che é un numero intero
-    console.log(todos)
-    //L'obiettivo é quello di mostrare nella pagina la lista di attivitá da svolgere
+    const [newToDo, setNewToDo] = useState("")
 
-    // Consiglio: puoi creare dei piccoli componenti come ad esempio:
+    const initialValue = todos.filter(activity => activity.completed === false)
+    const [toBeDone, setToBeDone] = useState(initialValue)
 
+    const handleSubmit = (event) => {
+        console.log("vuoi aggiungere " + newToDo);
+        const toDoToAdd = {
+            "id": 40,
+            "todo": newToDo,
+            "completed": false,
+            "userId": 26
+        }
+        // toBeDone.push(toDoToAdd) /// NOO perche cosi non renderizza
+        setToBeDone([...toBeDone, toDoToAdd])
+        console.log("hai aggiunto un nuovo todo")
 
-    // E poi puoi inserirli nel return:
+        event.preventDefault();
+    }
+    const handleChange = (event) => {
+        setNewToDo(event.target.value);
+    }
+    return (
 
+        <div className="App">
+            <table>
+                <thead>
+                <tr>
+                    <th>TODOS</th>
+                </tr>
+                </thead>
+                <tbody>
+                {toBeDone.map(activity => {
+                    return (
 
-        const toBeDone = todos.filter(activity => activity.completed === false);
-                return (
-                    <div className="App">
-                        {toBeDone.map(activity => {
-                            return (
-                                <li key={activity.id}>
-                                    {activity.todo}
-                                </li>
-                            )
-                        })}
-                    </div>
-                );
+                        <tr key={activity.id}>
+                            <td>
+                                {activity.todo}
+                            </td>
+                        </tr>
+
+                    )
+                })}
+                </tbody>
+            </table>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    New Task:
+                    <input type="text" name="new-todo" value={newToDo} onChange={handleChange}/>
+                </label>
+                <input type="submit" value="add"/>
+            </form>
+        </div>
+
+    );
 
 
     // Potresti completare questa task facendo copia incolla per ogni todo nella lista, ma l'obiettivo é quello di farlo utilizzando un ciclo (quello che preferisci, vedi: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) oppure in alternativa una funzione degli oggetti Array (vedi: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)
